@@ -4,3 +4,4 @@ src/assets/
 
 yarn.lock
 yarn-error.log
+.idea/

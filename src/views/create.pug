@@ -1,0 +1,107 @@
+extends layouts/main
+
+block content
+    div(id="main")
+        form(action="/create", method="POST", class="bg-base-200 m-20 p-20 rounded", @Submit.prevent="handlePost")
+            div(class="btn-group  justify-center")
+                input(type="text", name="url", placeholder="Youtube URL | Song Name", class="input w-full max-w-xs", v-model="inputBox")
+                button(type="submit", class="btn")="Submit"
+
+            div(class="form-control text-center")
+                label(class="mt-5", style="word-wrap:break-word")
+                    label.m-5 Slowed
+                    input(type="checkbox", class="toggle toggle-accent", v-model="mode")
+                    label.m-5 Sped up
+            //div
+            //    input(type="radio", name="radio-1", class="radio radio-accent", checked)
+            //    input(type="radio", name="radio-1", class="radio radio-accent")
+
+        div(class="justify-center bg-base-200 m-20 p-20 rounded", v-if="results.length > 0")
+            //label="results"
+
+            div(class="bg-gray-700 mt-1 rounded flex flex-wrap items-center justify-between", v-for="result in results")
+                div(class="m-5 flex flex-shrink-0 items-center text-white")
+                    label [result.title]
+                div(class="m-5 flex flex-shrink-0 items-center text-white")
+                    button(@Click="downloadSong(result.url)") Download
+                //div(class="p-2 mt-1 bg-gray-600 rounded text-center", v-for="result in results")
+                //    label.float-left [result.title]
+                //    //button.float-right Download
+
+
+
+
+    script(src="https://unpkg.com/vue@3")
+
+    script.
+        const {createApp, ref} = Vue;
+
+        createApp({
+            delimiters: ['[', ']'],
+            setup() {
+                const inputBox = ref("tsunami dvbbs");
+                const results = ref([]);
+                const mode = ref(false);
+
+                async function handlePost() {
+                    if(inputBox.value.startsWith("https://")) {
+                        // download(`${window.location.href}download?url=${inputBox.value}`, results.value.filter(row => row.url === url)[0].title + " - Sped up.mp3");
+                    }else {
+                        const fetched = await fetch("/search?query=" + inputBox.value).then(res => res.json());
+
+                        results.value = fetched.results;
+                    }
+                    console.log("posted");
+                }
+
+                function download(dataurl, filename) {
+                    let a = document.createElement("a");
+                    a.href = dataurl;
+                    a.setAttribute("download", filename);
+                    a.click();
+
+                    return false;
+                }
+
+                async function downloadSong(url) {
+                    console.log(url, mode.value);
+                    download(`${window.location.href}download?url=${url}&&mode=${mode.value}`, results.value.filter(row => row.url === url)[0].title + " - Sped up.mp3");
+                }
+
+                return {
+                    inputBox,
+                    handlePost,
+                    results,
+                    downloadSong,
+                    mode
+                }
+            },
+            mounted () {
+                console.log("Mounted");
+            }
+        }).mount("#main");
+
+        //div(class="justify-center")
+        //    label="results"
+
+        //script.
+        //    const searchBox = document.querySelector("input");
+        //
+        //    let searchTimeout;
+        //
+        //    function handleSearch() {
+        //        console.log(searchBox.value);
+        //
+        //        if(searchTimeout) clearTimeout(searchTimeout);
+        //
+        //        searchTimeout = setTimeout(() => {
+        //            fetch("/search?query=" + searchBox.value).then(res => res.json()).then(res => {
+        //                console.log(res);
+        //            })
+        //        }, 1000);
+        //    }
+
+    style.
+        [type="checkbox"] {
+            vertical-align: middle;
+        }
