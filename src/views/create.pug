@@ -2,10 +2,10 @@ extends layouts/main
 
 block content
     div(id="main")
-        form(action="/create", method="POST", class="bg-base-200 m-20 p-20 rounded", @Submit.prevent="handlePost")
-            div(class="btn-group  justify-center")
+        form(action="/create", method="POST", class="bg-base-200 lg:m-20 lg:p-20 p-10 mt-10 lg:mt-20 rounded", @Submit.prevent="handlePost")
+            div(class="btn-group  justify-center sm:mt-10")
                 input(type="text", name="url", placeholder="Youtube URL | Song Name", class="input w-full max-w-xs", v-model="inputBox")
-                button(type="submit", class="btn")="Submit"
+                button(type="submit", class="btn lg:mt-0 mt-2 lg:w-min w-full")="Submit"
 
             div(class="form-control text-center")
                 label(class="mt-5", style="word-wrap:break-word")
@@ -16,13 +16,13 @@ block content
             //    input(type="radio", name="radio-1", class="radio radio-accent", checked)
             //    input(type="radio", name="radio-1", class="radio radio-accent")
 
-        div(class="justify-center bg-base-200 m-20 p-20 rounded", v-if="results.length > 0")
+        div(class="justify-center bg-base-200 lg:m-20 lg:p-20 p-5 rounded", v-if="results.length > 0")
             //label="results"
 
             div(class="bg-gray-700 mt-1 rounded flex flex-wrap items-center justify-between", v-for="result in results")
                 div(class="m-5 flex flex-shrink-0 items-center text-white")
                     label [result.title]
-                div(class="m-5 flex flex-shrink-0 items-center text-white")
+                div(class="m-5 flex flex-shrink-0 items-center text-white lg:text-auto")
                     button(@Click="downloadSong(result.url)") Download
                 //div(class="p-2 mt-1 bg-gray-600 rounded text-center", v-for="result in results")
                 //    label.float-left [result.title]
